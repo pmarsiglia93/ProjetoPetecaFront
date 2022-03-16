@@ -1,28 +1,30 @@
 <div class="container-fluid">
-  <div class="container">
-    <div class="row d-flex align-itens-center">
+  <div class="container pt-4 mt-4">
+    <div class="d-flex align-itens-center">
       <div
         class="col-md-6 d-flex flex-column align-itens-center justify-content-center"
       >
-        <h2 class="fs-54 textoLaranja">
+        <h2 class="fs-54 text-black">
           Procure ou publique alguma oferta aqui!
         </h2>
-        <h5 class="fs-18 textoLaranja">
+        <h5 class="fs-18 text-black">
           Navegue e contribua com nossa rede de apoio.
         </h5>
         <p></p>
 
-        <!--Button's-->
-        <div class="row d-flex justify-content-center md-3 mt-5">
+        <!--Botões-->
+        <div class="d-flex justify-content-start mt-5">
           <button
-            class="btn btnLaranja mr-2 text-white justify-content-center rounded-pill"
+            class="btn btnLaranja text-white justify-content-center rounded-pill mr-4"
             data-toggle="modal"
             data-target="#novaPostagem"
           >
             Nova Postagem
           </button>
 
-          <a class="btn btnLaranja text-white rounded-pill" href="#postagens"
+          <a
+            class="btn btnLaranja text-white justify-content-center rounded-pill"
+            href="#postagens"
             >Ver Postagem</a
           >
         </div>
@@ -38,8 +40,8 @@
 </div>
 
 <!--NavBar-->
-
-<div class="container mb-5 mt-5" id="postagens">
+<div class="container-fluid" id="postagens">
+<div class="container mt-5">
   <nav>
     <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab">
       <a
@@ -90,12 +92,16 @@
       role="tabpanel"
       aria-labelledby="todasPostagens-tab"
     >
-      <!--Todas as Postagens-->
 
+
+      <!--Todas as Postagens-->
       <div
         class="postagem d-flex flex-column align-items-center mx-auto justify-content-center col-md-9"
       >
-        <div class="card mb-3" *ngFor="let item of listaPostagens">
+        <div
+          class="card mb-3"
+          *ngFor="let item of listaPostagens | orderBy: key:reverse"
+        >
           <div class="card-body">
             <!--Imagem, Razão Social e Data-->
             <div class="d-flex col-10 mb-4">
@@ -117,12 +123,19 @@
             </div>
 
             <!--Titulo, Demanda e Categoria-->
-            <div class="row d-flex col-md-12 justify-content-between mt-5">
+            <div class="row d-flex col-md-12 justify-content-between align-items-center mt-5">
               <h5 class="card-title">{{ item.titulo }}</h5>
 
-              <small class="ml-3">Demanda: {{ item.demanda }} </small>
+              <small class="ml-3 d-flex align-items-center justify-content-end" *ngIf="item.demanda == 'OFERTA'; else elseBlock">Demanda: Oferta </small>
+              <ng-template #elseBlock><small>Demanda: Procura </small></ng-template>
 
-              <small class="ml-3">Categoria: {{ item.tipoPostagem }} </small>
+              <small class="ml-3" *ngIf="item.tipoPostagem == 'DOACAODEROUPA'">Categoria: Doação de roupas </small>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'DOACAODEALIMENTOS'">Categoria: Doação de alimentos </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGACURSOLIVRE'">Categoria: Vaga curso civre </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGACURSOPROFISSIONALIZANTE'">Categoria: Vaga curso profissionalizante </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGACONTRATURNO'">Categoria: Vaga contraturno/SCFV </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGAOFICINAS'">Categoria: Vaga oficinas </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGASOCIAL'">Categoria: Vaga social </small></ng-container>
             </div>
 
             <!--Descrição-->
@@ -133,15 +146,16 @@
             <!--Localidade e botão-->
             <p>Localidade: {{ item.localidade }}</p>
             <div class="d-flex row justify-content-end mr-2 pt-2">
-              <button
+              <a href="https://wa.me/+5519971051856" target="blank"><button
                 type="button"
                 id="botao-sucesso"
-                class="btn btn-success mr-5 rounded-pill"
+                class="btn btn-success mr-5 rounded-pill" [ngStyle]="{'background-color':item.demanda === 'OFERTA' ? '#F5952C' : '#00C2E0' }"
               >
                 {{
                   item.demanda == "OFERTA" ? "Quero ajuda!" : "Quero ajudar!"
                 }}
               </button>
+              </a>
             </div>
           </div>
         </div>
@@ -158,8 +172,12 @@
       <div
         class="d-flex flex-column align-items-center mx-auto justify-content-center col-md-9"
       >
-        <div class="card mb-3" *ngFor="let item of user.postagem">
+        <div
+          class="card mb-3"
+          *ngFor="let item of user.postagem | orderBy: key:reverse"
+        >
           <div class="card-body">
+
             <!--Imagem, Razão Social e Data-->
             <div class="d-flex col-10 mb-4">
               <img
@@ -183,9 +201,16 @@
             <div class="row d-flex col-md-12 justify-content-between mt-5">
               <h5 class="card-title">Titulo: {{ item.titulo }}</h5>
 
-              <small class="ml-3">Demanda: {{ item.demanda }} </small>
+              <small class="ml-3 d-flex align-items-center justify-content-end" *ngIf="item.demanda == 'OFERTA'; else elseBlock">Demanda: Oferta </small>
+              <ng-template #elseBlock><small>Demanda: Procura </small></ng-template>
 
-              <small class="ml-3">Categoria: {{ item.tipoPostagem }} </small>
+              <small class="ml-3" *ngIf="item.tipoPostagem == 'DOACAODEROUPA'">Categoria: Doação de roupas </small>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'DOACAODEALIMENTOS'">Categoria: Doação de alimentos </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGACURSOLIVRE'">Categoria: Vaga curso civre </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGACURSOPROFISSIONALIZANTE'">Categoria: Vaga curso profissionalizante </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGACONTRATURNO'">Categoria: Vaga contraturno/SCFV </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGAOFICINAS'">Categoria: Vaga oficinas </small></ng-container>
+              <ng-container><small class="ml-3" *ngIf="item.tipoPostagem == 'VAGASOCIAL'">Categoria: Vaga social </small></ng-container>
             </div>
 
             <!--Descrição-->
@@ -225,7 +250,7 @@
       </div>
     </div>
 
-    <!-- Postagem Tema -->
+    <!-- Postagem por Tema -->
     <div
       class="tab-pane fade"
       id="postagemTema"
@@ -259,7 +284,10 @@
       <div
         class="d-flex flex-column align-items-center mx-auto justify-content-center col-md-9"
       >
-        <div class="card mb-3" *ngFor="let postagem of listaPostagens">
+        <div
+          class="card mb-3"
+          *ngFor="let postagem of listaPostagens | orderBy: key:reverse"
+        >
           <div class="card" *ngIf="postagem.tipoPostagem == selectPost">
             <div class="card-body">
               <div class="d-flex col-10 mb-4">
@@ -308,7 +336,7 @@
     </div>
   </div>
 </div>
-
+</div>
 <!-- Modal NOVA POSTAGEM-->
 
 <div
@@ -581,12 +609,19 @@
 
         <div class="form-group rounded-pill">
           <label for="demanda">Demanda:</label>
-          <p>{{ postagem.demanda }}</p>
+          <p *ngIf="postagem.demanda == 'OFERTA'; else elseBlock">Oferta</p>
+          <ng-template #elseBlock><p>Procura </p></ng-template>
         </div>
 
         <div class="form-group rounded-pill">
-          <label for="categoria">Categoria</label>
-          <p>{{ postagem.tipoPostagem }}</p>
+          <label for="categoria" >Categoria</label>
+          <p *ngIf="postagem.tipoPostagem == 'DOACAODEROUPA'">Doação de roupas</p>
+          <ng-container><p *ngIf="postagem.tipoPostagem == 'DOACAODEALIMENTOS'">Doação de alimentos</p></ng-container>
+          <ng-container><p *ngIf="postagem.tipoPostagem == 'VAGACURSOLIVRE'">Vaga curso livre</p></ng-container>
+          <ng-container><p *ngIf="postagem.tipoPostagem == 'VAGACURSOPROFISSIONALIZANTE'">Vaga curso profissionalizante</p></ng-container>
+          <ng-container><p *ngIf="postagem.tipoPostagem == 'VAGACONTRATURNO'">Vaga contraturno/SCFV</p></ng-container>
+          <ng-container><p *ngIf="postagem.tipoPostagem == 'VAGAOFICINAS'">Vaga oficinas</p></ng-container>
+          <ng-container><p *ngIf="postagem.tipoPostagem == 'VAGAOSOCIAL'">Vaga social</p></ng-container>
         </div>
 
         <div class="form-group rounded-pill">
@@ -603,14 +638,15 @@
       <div class="modal-footer justify-content-center">
         <button
           type="button"
-          class="btn btn-outline-danger rounded-circle"
+          class="btn btn-outline-danger rounded-pill"
+          id="botao-cancelar"
           data-dismiss="modal"
         >
           Cancelar
         </button>
         <button
           type="button"
-          class="btn btn-outline-success rounded-circle"
+          class="btn btn-outline-success rounded-pill"
           id="botao-deletar"
           (click)="apagar()"
           data-dismiss="modal"
